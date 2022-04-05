@@ -1,0 +1,70 @@
+﻿/* Reset the margin of all heading elements */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+/* Styles for the header section */
+.header {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left:0;
+    right: 0;
+    z-index: 4;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 80px;
+    
+}
+.header-inner{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 24px;
+    color: #1050e6;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px;
+}
+/* Styles for the container div */
+.container {
+    max-width: 1920px;
+    margin: 0 50px 0 50px;
+    padding: 0 20px;
+
+}
+
+/* Styles for the flex-row class */
+.flex-row {
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+/* Styles for the nav section */
+.nav {
+    margin-left: auto;
+    text-transform: uppercase;
+    font-size: 22px;
+    font-weight:600;
+}
+
+/* Styles for the nav links */
+.nav-link {
+    display: inline-block;
+    vertical-align: top;
+    color: #333;
+    text-decoration: none;
+    margin: 20px;
+    padding: 5px 0;
+    transition: color .3s linear;
+
+}
+
+/* Styles for the nav links on hover */
+.nav-link:hover {
+    color: #1050e6;
+    border-bottom: 2px solid #ff0000;
+}
