@@ -74,15 +74,33 @@ body {
 .nav-link {
     display: inline-block;
     margin: 20px;
+    position: relative;
     vertical-align: top;
     color: #333;
     text-decoration: none;
     transition: color .3s linear;
 
 }
+.nav-link::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #ff0000;
+    opacity:0;
 
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+
+    transition: opacity .1s linear;
+}
 /* Styles for the nav links on hover */
-    .nav-link:hover {
-        color: #1050e6;
-        border-bottom: 2px solid #ff0000;
-    }
+.nav-link:hover {
+    color: #1050e6;
+}
+
+.nav-link:hover::after{
+    opacity:1;
+}
