@@ -1,3 +1,5 @@
+using BussPushNotification.Controllers;
+
 namespace BussPushNotification
 {
     public class Program
@@ -8,7 +10,7 @@ namespace BussPushNotification
             builder.Services.AddControllersWithViews();
             // Add services to the container.
             builder.Services.AddRazorPages();
-
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,8 +25,20 @@ namespace BussPushNotification
             app.UseStaticFiles();
             app.MapDefaultControllerRoute();
             app.UseRouting();
-
             app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                // Add the new About controller and action to the routing system
+                endpoints.MapControllerRoute(
+                    name: "about",
+                    pattern: "About",
+                    defaults: new { controller = "About", action = "Index" });
+            });
+            
 
             app.MapRazorPages();
 
