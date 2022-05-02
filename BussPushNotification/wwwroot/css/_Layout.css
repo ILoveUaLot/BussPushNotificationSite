@@ -4,6 +4,11 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face{
+    font-family: "Roboto";
+    src: url('../Fonts/Roboto/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.ttf') 
+    format('truetype');
+}
 /* Reset the margin of all heading elements */
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
@@ -131,4 +136,12 @@ body {
     height: 3px;
     margin: 30px auto;
     background-color: #db0762;
+}
+
+.section-text{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    color: #3f848e;
 }
