@@ -1,3 +1,22 @@
 ﻿.about{
+    display: flex;
+    justify-content: space-between;
+}
 
+.about-item{
+    width: 40%;
+}
+
+.about-item:hover .about-img img{
+    opacity: .5;
+}
+
+.about-img {
+    max-height: 330px;
+    background: linear-gradient(to bottom, #ffcccc, #ff6600);
+}
+
+.about-img img{
+    display: block;
+    transition: opacity .1s linear;
 }
