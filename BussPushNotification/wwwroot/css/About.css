@@ -3,8 +3,11 @@
     justify-content: space-between;
 }
 
-.about-item{
-    width: 40%;
+.about-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
 }
 
 .about-item:hover .about-img img{
@@ -12,11 +15,22 @@
 }
 
 .about-img {
+    
     max-height: 330px;
-    background: linear-gradient(to bottom, #ffcccc, #ff6600);
 }
 
-.about-img img{
+.about-img img {
     display: block;
     transition: opacity .1s linear;
 }
+
+.about-img.linear-gradient {
+    background: linear-gradient(to bottom, #ff0000, #ffff00);
+}
+
+.about-img.radial-gradient {
+    width: 300px;
+    border-radius: 100%;
+    background: radial-gradient(circle at center, #ff0000, #ffff00);
+}
+
