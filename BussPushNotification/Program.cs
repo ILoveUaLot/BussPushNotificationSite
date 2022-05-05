@@ -30,13 +30,18 @@ namespace BussPushNotification
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}");
 
                 // Add the new About controller and action to the routing system
                 endpoints.MapControllerRoute(
                     name: "about",
                     pattern: "About",
                     defaults: new { controller = "About", action = "Index" });
+
+                endpoints.MapControllerRoute(
+                    name: "login",
+                    pattern: "Login",
+                    defaults: new { controller = "Login", action = "Index" });
             });
             
 
