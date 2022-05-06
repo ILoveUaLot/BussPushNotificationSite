@@ -8,5 +8,10 @@ namespace BussPushNotification.Controllers
         {
             return View();
         }
+
+        public ViewResult AboutPage()
+        {
+            return View();
+        }
     }
 }
