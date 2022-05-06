@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head lang="en-us">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/css/Login.css" />
+    <title>SignUp</title>
+</head>
+<body>
+    <div class="login-form">
+        <h1 class="login-text">Let's get acquainted!</h1>
+
+        <form>
+            <input type="text" name="Name" placeholder="Name" required>
+            <input type="text" name="Surname" placeholder="Surname" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="email" name="email" placeholder="smth@gmail.com" required>
+            
+            <button type="submit">Check in</button>
+        </form>
+        <div class="login-separator">
+            OR
+        </div>
+        <div class="alternative-items">
+            <div class="alternative-item">
+                <a href="/Home">
+                    Home
+                </a>
+            </div>
+            <div class="alternative-item">
+                <a href="/Login">
+                    Login in
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
