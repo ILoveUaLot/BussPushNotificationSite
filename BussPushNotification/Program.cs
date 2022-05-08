@@ -1,4 +1,6 @@
 using BussPushNotification.Controllers;
+using BussPushNotification.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BussPushNotification
 {
@@ -10,9 +12,24 @@ namespace BussPushNotification
             builder.Services.AddControllersWithViews();
             // Add services to the container.
             builder.Services.AddRazorPages();
-            
+            builder.Services.AddDbContext<BussNotificationContext>(opts =>
+                opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
             var app = builder.Build();
-
+            // Проверяем подключение к базе данных
+            //TODO: позже удалить
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<BussNotificationContext>();
+                if (context.Database.CanConnect())
+                {
+                    Console.WriteLine("Подключение к базе данных успешно установлено.");
+                }
+                else
+                {
+                    Console.WriteLine("Не удалось подключиться к базе данных.");
+                }
+            }
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
