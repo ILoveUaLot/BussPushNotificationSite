@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BussPushNotification.Models.User
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -12,13 +13,11 @@
     <div class="login-form">
         <h1 class="login-text">Let's get acquainted!</h1>
 
-        <form>
-            <input type="text" name="Name" placeholder="Name" required>
-            <input type="text" name="Surname" placeholder="Surname" required>
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="email" name="email" placeholder="smth@gmail.com" required>
-            
+        <form method="post">
+            <input name="UserName" type="text" placeholder="Username" required />
+            <input name="UserPassword" type="password" placeholder="Password" required />
+            <input name="RepeatedPassword" type="password" placeholder="Repeat password" required />
+            <input name="UserEmail" type="email" placeholder="smth@gmail.com" required />
             <button type="submit">Check in</button>
         </form>
         <div class="login-separator">
