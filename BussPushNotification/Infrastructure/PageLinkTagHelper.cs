@@ -20,8 +20,8 @@ namespace BussPushNotification.Infrastructure
         [HtmlAttributeNotBound]
         public ViewContext? ViewContext { get; set; } 
         public string? PageAction { get; set; }
-        public string? Url { get; set; }
-        public string? TagText { get; set; }
+        public string? Url = "AboutUs";
+        public string TagText = "About";
         public override void Process(TagHelperContext context, 
             TagHelperOutput output)
         {
@@ -31,11 +31,15 @@ namespace BussPushNotification.Infrastructure
                 TagBuilder result = new TagBuilder("nav");
                 TagBuilder tag = new TagBuilder("a");
                 tag.Attributes["href"] = urlHelper.Action(PageAction, Url);
-                tag.Attributes["text"] = TagText;
+                tag.InnerHtml.AppendHtml(TagText);
+                
                 result.InnerHtml.AppendHtml(tag);
                 output.Content.AppendHtml(result.InnerHtml);
             }
-           
+            else
+            {
+                throw new InvalidOperationException("ViewContext cannot be null.");
+            }  
         }
     }
 }

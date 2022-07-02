@@ -1,6 +1,7 @@
 ﻿using BussPushNotification.Data;
 using BussPushNotification.Data.Interface;
 using BussPushNotification.Models;
+using BussPushNotification.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,20 +25,28 @@ namespace BussPushNotification.Controllers
         }
 
         [HttpPost]
-        public ViewResult SignUpForm(User user)
+        public ViewResult SignUpForm(RegisterViewModel userModel)
         {
             if(ModelState.IsValid)
             {
-                Console.WriteLine("sad");
+                User user = new User()
+                {
+                    UserID = Guid.NewGuid(),
+                    UserName = userModel.UserName,
+                    UserEmail = userModel.UserEmail,
+                    UserPassword = userModel.UserPassword,
+                }
+                db.Create(user);
+                db.Save();
                 return View("Login");
             }
-            foreach (var modelState in ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
+            //foreach (var modelState in ModelState.Values)
+            //{
+            //    foreach (var error in modelState.Errors)
+            //    {
+            //        Console.WriteLine(error.ErrorMessage);
+            //    }
+            //}
             return View();
         }
     }
