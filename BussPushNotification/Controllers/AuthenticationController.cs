@@ -7,14 +7,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BussPushNotification.Controllers
 {
-    public class LoginController : Controller
+    public class AuthenticationController : Controller
     {
         IRepository<User> db;
-        public LoginController(IRepository<User> repository)
+        public AuthenticationController(IRepository<User> repository)
         {
             db = repository;
         }
+        [HttpGet]
         public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ViewResult Login(LoginViewModel userModel)
         {
             return View();
         }
