@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BussPushNotification.Data.Repository
 {
-    public class SQLUserRepository : IRepository<User>
+    public class SQLUserRepository : IUserRepository
     {
         private BussNotificationContext db;
 
@@ -14,7 +14,7 @@ namespace BussPushNotification.Data.Repository
         {
             db = context;
         }
-
+        
         public void Create(User item)
         {
             db.Add(item);
@@ -25,7 +25,7 @@ namespace BussPushNotification.Data.Repository
             db.Remove(item);
         }
 
-        public User GetItem(int id)
+        public User GetItem(Guid id)
         {
             return db.Users.Find(id);
         }
