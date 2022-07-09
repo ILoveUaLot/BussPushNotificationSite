@@ -1,5 +1,6 @@
 ﻿using BussPushNotification.Data.Interface;
 using BussPushNotification.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BussPushNotification.Data.Repository
@@ -15,22 +16,22 @@ namespace BussPushNotification.Data.Repository
             db = context;
         }
         
-        public void Create(User item)
+        public void Create(IdentityUser item)
         {
             db.Add(item);
         }
 
-        public void Delete(User item)
+        public void Delete(IdentityUser item)
         {
             db.Remove(item);
         }
 
-        public User GetItem(Guid id)
+        public IdentityUser GetItem(Guid id)
         {
             return db.Users.Find(id);
         }
 
-        public IQueryable<User> GetList()
+        public IQueryable<IdentityUser> GetList()
         {
             return db.Users;
         }
@@ -40,7 +41,7 @@ namespace BussPushNotification.Data.Repository
             db.SaveChanges();
         }
 
-        public void Update(User item)
+        public void Update(IdentityUser item)
         {
             db.Entry(item).State = EntityState.Modified;
         }
