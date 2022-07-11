@@ -1,0 +1,14 @@
+﻿@page
+@model BussPushNotification.Pages.Roles.CreateModel
+<h5 class="bg-primary text-white text-center p-2">Create Role</h5>
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="card-group">
+        <label>Role name</label>
+        <input asp-for="Name" class="form-control"/>
+    </div>
+    <div class="py-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a class="btn btn-secondary" asp-page="List">Back</a>
+    </div>
+</form>
