@@ -30,6 +30,7 @@ namespace BussPushNotification
                 opts.Password.RequireLowercase = true;
                 opts.Password.RequireUppercase = true;
                 opts.Password.RequireDigit = true;
+                opts.User.RequireUniqueEmail = true;
             });
             var app = builder.Build();
             // Проверяем подключение к базе данных
