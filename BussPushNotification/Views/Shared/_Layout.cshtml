@@ -12,17 +12,17 @@
             <div class="header-inner flex-row">
                 <div class="header-title">
                     <h1>
-                        <a asp-controller="Home" asp-action="Index" href="/Home">
+                        <a asp-controller="Home" asp-action="Index">
                             BUS ALERT
                         </a>
                     </h1>
                 </div>
 
                 <nav class="nav">
-                    <a class="nav-link" asp-controller="Home" asp-action="AboutPage" href="/About">
+                    <a class="nav-link" asp-controller="Home" asp-action="AboutPage">
                         About us
                     </a>
-                    <a class="nav-link" href="/Login">
+                    <a class="nav-link" asp-controller="Authentication" asp-action="Login">
                         Login
                     </a>
                 </nav>
