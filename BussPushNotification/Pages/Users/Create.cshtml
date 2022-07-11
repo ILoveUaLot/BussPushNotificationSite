@@ -1,0 +1,26 @@
+﻿@page
+@model BussPushNotification.Pages.Users.CreateModel
+@{
+    Layout = "_Layout";
+}
+
+<h5 class="bg-primary text-white text-center p-2">Create user</h5>
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="card-group">
+        <label>User name</label>
+        <input  class="form-control" asp-for="UserName">
+    </div>
+    <div class="card-group">
+        <label>Email</label>
+        <input class="form-control" asp-for="Email">
+    </div>
+    <div class="card-group">
+        <label>Password</label>
+        <input class="form-control" asp-for="Password">
+    </div>
+    <div class="py-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a class="btn btn-secondary" asp-page="list">Back</a>
+    </div>
+</form>

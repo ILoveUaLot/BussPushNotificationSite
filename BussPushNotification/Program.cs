@@ -75,7 +75,6 @@ namespace BussPushNotification
                     defaults: new {controller = "Authentication", action = "SignUpForm"}
                     );
             });
-            
 
             app.MapRazorPages();
 
