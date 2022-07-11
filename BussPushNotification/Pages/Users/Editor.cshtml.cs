@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BussPushNotification.Pages.Users
 {
-    public class EditorModel : PageModel
+    public class EditorModel : AdminPageModel
     {
         public UserManager<IdentityUser> UserManager { get; set; }
         public EditorModel(UserManager<IdentityUser> userManager)
