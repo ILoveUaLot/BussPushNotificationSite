@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BussPushNotification.Pages.Roles
 {
-    public class CreateModel : PageModel
+    public class CreateModel : AdminPageModel
     {
         public RoleManager<IdentityRole> RoleManager { get; set; }
         public CreateModel(RoleManager<IdentityRole> roleManager)
