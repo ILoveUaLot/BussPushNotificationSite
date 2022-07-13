@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace BussPushNotification.Pages.Roles
 {
@@ -16,13 +17,13 @@ namespace BussPushNotification.Pages.Roles
         
         public IEnumerable<IdentityRole> Roles { get; set; } = Enumerable.Empty<IdentityRole>();
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            Roles = RoleManager.Roles;
+            Roles = await RoleManager.Roles.ToListAsync();
         }
         public async Task<string> GetMembersString(string role)
         {
-            IEnumerable<IdentityUser> users = await UserManager.GetUsersInRoleAsync(role);
+            IEnumerable<IdentityUser> users = (await UserManager.GetUsersInRoleAsync(role));
             string result = users.Count() == 0 ? "No members"
                 : string.Join(", ", users.Take(3).Select(u => u.UserName).ToArray());
             return users.Count() > 3 ? $"{result}, (plus others)" : result;

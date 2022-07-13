@@ -18,7 +18,7 @@
             <tr>
                 <td>@role.Id</td>
                 <td>@role.Name</td>
-                <td>@await Model.GetMembersString(role.Name)</td>
+                <td>@(await Model.GetMembersString(role.Name))</td>
                 <td class="text-center">
                     <form asp-page="List" method="post">
                         <input type="hidden" asp-for="@role.Id"/>
