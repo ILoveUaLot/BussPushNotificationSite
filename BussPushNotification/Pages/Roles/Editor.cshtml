@@ -1,0 +1,67 @@
+﻿@page "{id}"
+@model BussPushNotification.Pages.Roles.EditorModel
+<h5 class="bg-primary text-white text-center p-2">Edit role: @Model.Role.Name</h5>
+<form method="post">
+    <input type="hidden" name="rolename" value="@Model.Role.Name"/>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <h5 class="bg-secondary text-white p-2">Members</h5>
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if((await Model.Members()).Count() == 0)
+            {
+                <tr>
+                    <td colspan="3" class="text-center">No members</td>
+                </tr>
+            }
+            @foreach(IdentityUser user in await Model.Members())
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button type="submit" asp-route-userid="@user.Id" class="btn btn-primary btn-sm">Change</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <h5 class="bg-secondary text-white p-2">No Members</h5>
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if((await Model.NonMembers()).Count() == 0)
+            {
+                <tr>
+                    <td colspan="3" class="text-center">No user without role</td>
+                </tr>
+            }
+            @foreach(IdentityUser user in await Model.NonMembers())
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button type="submit" asp-route-userid="@user.Id" class="btn btn-primary btn-sm">
+                            Change
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-page="list" class="btn btn-secondary">Back</a>
+</form>
