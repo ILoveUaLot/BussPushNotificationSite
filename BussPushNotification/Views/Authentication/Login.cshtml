@@ -12,18 +12,19 @@
 <body>
     <div class="login-form">
         <h1 class="login-text">Welcome!</h1>
-
-        <form>
-            <input type="text" name="UserName" placeholder="Username" required>
-            <input type="password" name="UserPassword" placeholder="Password" required>
-            <button type="submit">Log in</button>
+        <form method="post">
+            <input type="hidden" asp-for=ReturnUrl/>
+            <input type="text" asp-for=UserName placeholder="Username" required>
+            <input type="password" asp-for=UserPassword placeholder="Password" required>
+            <div asp-validation-summary="All" style="color:red"></div>
+            <button type="submit" class="btn btn-primary btn-sm">Log in</button>
         </form>
         <div class="login-separator">
             OR
         </div>
         <div class="alternative-items">
             <div class="alternative-item">
-                <a href="/Home">
+                <a asp-action="Index" asp-controller="Home">
                     Back
                 </a>
             </div>
@@ -34,5 +35,6 @@
             </div>
         </div>
     </div>
+    
 </body>
 </html>
