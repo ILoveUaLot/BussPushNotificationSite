@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BussPushNotification.Pages.Roles
+namespace BussPushNotification.Pages.Roles.ViewModels
 {
     public class CreateModel : AdminPageModel
     {
@@ -25,7 +25,7 @@ namespace BussPushNotification.Pages.Roles
                 {
                     return RedirectToPage("List");
                 }
-                foreach(IdentityError err in result.Errors)
+                foreach (IdentityError err in result.Errors)
                 {
                     ModelState.AddModelError("", err.Description);
                 }

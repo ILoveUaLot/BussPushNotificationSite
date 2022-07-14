@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace BussPushNotification.Pages.Users
+namespace BussPushNotification.Pages.Users.ViewModels
 {
     public class EditorModel : AdminPageModel
     {
@@ -36,7 +36,7 @@ namespace BussPushNotification.Pages.Users
                 user.UserName = Name;
                 user.Email = Email;
                 IdentityResult result = await UserManager.UpdateAsync(user);
-                if(result.Succeeded && !String.IsNullOrEmpty(Password))
+                if (result.Succeeded && !string.IsNullOrEmpty(Password))
                 {
                     await UserManager.RemovePasswordAsync(user);
                     result = await UserManager.AddPasswordAsync(user, Password);

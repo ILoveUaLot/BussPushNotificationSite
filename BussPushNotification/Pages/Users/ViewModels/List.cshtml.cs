@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BussPushNotification.Pages.Users
+namespace BussPushNotification.Pages.Users.ViewModels
 {
     public class ListModel : AdminPageModel
     {
@@ -19,7 +19,7 @@ namespace BussPushNotification.Pages.Users
         public async Task<IActionResult> OnPostAsync(string id)
         {
             IdentityUser user = await UserManager.FindByIdAsync(id);
-            if(user != null) 
+            if (user != null)
             {
                 await UserManager.DeleteAsync(user);
             }

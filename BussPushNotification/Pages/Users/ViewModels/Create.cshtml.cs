@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace BussPushNotification.Pages.Users
+namespace BussPushNotification.Pages.Users.ViewModels
 {
     public class CreateModel : AdminPageModel
     {
