@@ -2,6 +2,7 @@
 using BussPushNotification.Data.Interface;
 using BussPushNotification.Models;
 using BussPushNotification.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,11 +10,12 @@ namespace BussPushNotification.Controllers
 {
     public class AuthenticationController : Controller
     {
-        IUserRepository db;
-        public AuthenticationController(IUserRepository repository)
+        private SignInManager<IdentityUser> _signInManager;
+        public AuthenticationController(SignInManager<IdentityUser> signInManager)
         {
-            db = repository;
+            _signInManager = signInManager;
         }
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -21,8 +23,18 @@ namespace BussPushNotification.Controllers
         }
 
         [HttpPost]
-        public ViewResult Login(LoginViewModel userModel)
+        public async Task<IActionResult> Login(LoginViewModel userModel)
         {
+            if (ModelState.IsValid)
+            {
+                Microsoft.AspNetCore.Identity.SignInResult result
+                = await _signInManager.PasswordSignInAsync(userModel.UserName, userModel.UserPassword, false, false);
+                if (result.Succeeded)
+                {
+                    return View(userModel.ReturnUrl ?? "/");
+                }
+                ModelState.AddModelError("", "Invalid username or password");
+            }
             return View();
         }
         [HttpGet]
@@ -43,8 +55,6 @@ namespace BussPushNotification.Controllers
                     UserEmail = userModel.UserEmail,
                     UserPassword = userModel.UserPassword
                 };
-                db.Create(user);
-                db.Save();
                 return View("Login");
             }
             return View();
