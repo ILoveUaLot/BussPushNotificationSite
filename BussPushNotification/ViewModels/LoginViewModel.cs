@@ -6,8 +6,11 @@ namespace BussPushNotification.ViewModels
 {
     public class LoginViewModel
     {
+        [FromQuery(Name = "ReturnUrl")]
         [BindProperty(SupportsGet = true)]
         public string? ReturnUrl { get; set; }
+            
+        
         [Required]
         [BindProperty]
         public string UserName { get; set; } = string.Empty;
