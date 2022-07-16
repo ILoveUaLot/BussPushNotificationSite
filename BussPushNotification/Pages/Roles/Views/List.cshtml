@@ -25,7 +25,7 @@
                         <a class="btn btn-sm btn-warning" asp-page="Editor" 
                                                           asp-route-id="@role.Id"
                                                           asp-route-mode="edit">Edit</a>
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-sm btn-danger" asp-route-id="@role.Id">Delete</button>
                     </form>
                 </td>
             </tr>
