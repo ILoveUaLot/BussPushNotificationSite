@@ -4,6 +4,7 @@ using BussPushNotification.Models;
 using BussPushNotification.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace BussPushNotification.Controllers
@@ -11,9 +12,11 @@ namespace BussPushNotification.Controllers
     public class AuthenticationController : Controller
     {
         private SignInManager<IdentityUser> _signInManager;
-        public AuthenticationController(SignInManager<IdentityUser> signInManager)
+        public UserManager<IdentityUser> UserManager { get; set; }
+        public AuthenticationController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
+            UserManager = userManager;
         }
 
         [HttpGet]
@@ -31,7 +34,8 @@ namespace BussPushNotification.Controllers
                 = await _signInManager.PasswordSignInAsync(userModel.UserName, userModel.UserPassword, false, false);
                 if (result.Succeeded)
                 {
-                    return View(userModel.ReturnUrl ?? "/");
+                    return userModel.ReturnUrl != null ? RedirectToPage(userModel.ReturnUrl)
+                        : View("/");
                 }
                 ModelState.AddModelError("", "Invalid username or password");
             }
@@ -44,18 +48,20 @@ namespace BussPushNotification.Controllers
         }
 
         [HttpPost]
-        public ViewResult SignUpForm(RegisterViewModel userModel)
+        public async Task<IActionResult> SignUpForm(RegisterViewModel userModel)
         {
             if(ModelState.IsValid)
             {
-                User user = new User()
+                IdentityUser user = new IdentityUser { UserName = userModel.UserName, Email = userModel.UserEmail };
+                IdentityResult result = await UserManager.CreateAsync(user, userModel.UserPassword);
+                if(result.Succeeded)
                 {
-                    UserID = Guid.NewGuid(),
-                    UserName = userModel.UserName,
-                    UserEmail = userModel.UserEmail,
-                    UserPassword = userModel.UserPassword
-                };
-                return View("Login");
+                    return View(userModel.ReturnUrl ?? "/");
+                }
+                foreach(IdentityError err in result.Errors)
+                {
+                    ModelState.AddModelError("", err.Description);
+                }
             }
             return View();
         }
