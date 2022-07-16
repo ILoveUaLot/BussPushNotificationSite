@@ -12,12 +12,13 @@
 <body>
     <div class="login-form">
         <h1 class="login-text">Let's get acquainted!</h1>
-
         <form method="post">
-            <input name="UserName" type="text" placeholder="Username" required />
-            <input name="UserPassword" type="password" placeholder="Password" required />
-            <input name="RepeatedPassword" type="password" placeholder="Repeat password" required />
-            <input name="UserEmail" type="email" placeholder="smth@gmail.com" required />
+            <div asp-validation-summary="All" style="color: red"></div>
+            <input type="hidden" asp-for="ReturnUrl" value="/Login"/>
+            <input asp-for="UserName" type="text" placeholder="Username" required />
+            <input asp-for="UserPassword" type="password" placeholder="Password" required />
+            <input asp-for="RepeatedPassword" type="password" placeholder="Repeat password" required />
+            <input asp-for="UserEmail" type="email" placeholder="smth@gmail.com" required />
             <button type="submit">Check in</button>
         </form>
         <div class="login-separator">
@@ -25,12 +26,12 @@
         </div>
         <div class="alternative-items">
             <div class="alternative-item">
-                <a href="/Home">
+                <a asp-action="Index" asp-controller="Home">
                     Home
                 </a>
             </div>
             <div class="alternative-item">
-                <a href="/Login">
+                <a asp-action="login">
                     Login in
                 </a>
             </div>
