@@ -3,6 +3,7 @@ using BussPushNotification.Data;
 using BussPushNotification.Data.Interface;
 using BussPushNotification.Data.Repository;
 using BussPushNotification.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -32,6 +33,13 @@ namespace BussPushNotification
                 opts.Password.RequireDigit = true;
                 opts.User.RequireUniqueEmail = true;
             });
+            builder.Services.Configure<CookieAuthenticationOptions>(
+                IdentityConstants.ApplicationScheme,
+                opts =>
+                {
+                    opts.LoginPath = "/Authentication/Login";
+                    opts.AccessDeniedPath = "/Account/Views/Accessdenied";
+                });
             var app = builder.Build();
             // Проверяем подключение к базе данных
             //TODO: позже удалить
@@ -67,7 +75,6 @@ namespace BussPushNotification
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}");
 
-                // Add the new About controller and action to the routing system
                 endpoints.MapControllerRoute(
                     name: "about",
                     pattern: "About",
