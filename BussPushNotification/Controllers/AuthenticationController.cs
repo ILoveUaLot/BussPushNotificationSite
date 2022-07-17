@@ -32,10 +32,11 @@ namespace BussPushNotification.Controllers
             {
                 Microsoft.AspNetCore.Identity.SignInResult result
                 = await _signInManager.PasswordSignInAsync(userModel.UserName, userModel.UserPassword, false, false);
+                
                 if (result.Succeeded)
                 {
                     return userModel.ReturnUrl != null ? RedirectToPage(userModel.ReturnUrl)
-                        : View("/");
+                        : RedirectToAction("Profile","Account");
                 }
                 ModelState.AddModelError("", "Invalid username or password");
             }
