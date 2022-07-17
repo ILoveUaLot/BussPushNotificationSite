@@ -10,7 +10,12 @@
   src: url("./fonts/bootstrap-icons.woff2?1fa40e8900654d2863d011707b9fb6f2") format("woff2"),
 url("./fonts/bootstrap-icons.woff?1fa40e8900654d2863d011707b9fb6f2") format("woff");
 }
-
+.bi-md{
+    font-size: 2em;
+}
+.bi-lg{
+    font-size: 4em;
+}
 .bi::before,
 [class^="bi-"]::before,
 [class*=" bi-"]::before {
