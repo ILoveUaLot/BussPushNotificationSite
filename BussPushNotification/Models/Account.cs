@@ -2,9 +2,10 @@
 
 namespace BussPushNotification.Models
 {
-    public class User : IdentityUser
+    public class Account
     {
-        public Guid UserID { get; set; }
+        public string Id { get; init; }
+        public byte[]? UserAvatar { get; set; }
         public string UserName { get; set; } = string.Empty;
         public string UserEmail { get; set; } = string.Empty;
         public string UserPassword { get; set; } = string.Empty;
