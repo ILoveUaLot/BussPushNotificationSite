@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace BussPushNotification.Controllers
 {
@@ -18,7 +19,7 @@ namespace BussPushNotification.Controllers
             _signInManager = signInManager;
             UserManager = userManager;
         }
-
+        
         [HttpGet]
         public IActionResult Login()
         {
@@ -36,7 +37,8 @@ namespace BussPushNotification.Controllers
                 if (result.Succeeded)
                 {
                     return userModel.ReturnUrl != null ? RedirectToPage(userModel.ReturnUrl)
-                        : RedirectToAction("Profile","Account");
+                        : RedirectToAction("Profile","Account", new {id = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                        });
                 }
                 ModelState.AddModelError("", "Invalid username or password");
             }
