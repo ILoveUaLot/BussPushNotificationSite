@@ -77,23 +77,19 @@ namespace BussPushNotification
 
                 endpoints.MapControllerRoute(
                     name: "about",
-                    pattern: "About",
+                    pattern: "/About",
                     defaults: new { controller = "Home", action = "AboutPage" });
 
                 endpoints.MapControllerRoute(
                     name: "login",
-                    pattern: "Login",
+                    pattern: "/Login",
                     defaults: new { controller = "Authentication", action = "Login" });
 
                 endpoints.MapControllerRoute(
                     name: "registration",
-                    pattern: "SignUp",
+                    pattern: "/SignUp",
                     defaults: new {controller = "Authentication", action = "SignUpForm"}
                     );
-                endpoints.MapControllerRoute(
-                    name: "profile",
-                    pattern: "/profile/{id}",
-                    defaults: new { controller = "Account", action = "Profile" });
             });
 
             app.MapRazorPages();
