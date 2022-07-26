@@ -3,10 +3,10 @@
     public interface IRepository<T, TKey> : IDisposable
     {
         IQueryable<T> GetList();
-        T GetItem(TKey id);
-        void Create(T item);
+        Task<T> GetItemAsync(TKey id);
+        Task CreateAsync(T item);
         void Update(T item);
-        void Delete(T item);
-        void Save();
+        Task DeleteAsync(T item);
+        Task SaveAsync();
     }
 }
