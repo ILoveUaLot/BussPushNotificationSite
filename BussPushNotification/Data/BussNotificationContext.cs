@@ -12,5 +12,6 @@ namespace BussPushNotification.Data
             
         }
         public DbSet<IdentityUser> Users { get; set; } = null!;
+        public DbSet<Api> Apis { get; set; }
     }
 }
