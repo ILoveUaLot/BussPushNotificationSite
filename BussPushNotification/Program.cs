@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Newtonsoft.Json;
 
 namespace BussPushNotification
 {
@@ -18,12 +19,14 @@ namespace BussPushNotification
             builder.Services.AddControllersWithViews();
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddMemoryCache();
             builder.Services.AddDbContext<BussNotificationContext>(opts =>
                 opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().
                 AddEntityFrameworkStores<BussNotificationContext>();
             builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+            builder.Services.AddScoped<IApiRepositroy, SQLApiRepository>();
             builder.Services.Configure<IdentityOptions>(opts =>
             {
                 opts.Password.RequiredLength = 6;
@@ -40,7 +43,14 @@ namespace BussPushNotification
                     opts.LoginPath = "/Authentication/Login";
                     opts.AccessDeniedPath = "/Account/Views/Accessdenied";
                 });
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddHttpClient("station_listAPI", client =>
+            {
+                client.BaseAddress = new Uri("https://api.rasp.yandex.net/v3.0/stations_list/");
+            });
             var app = builder.Build();
+
             // Проверяем подключение к базе данных
             //TODO: позже удалить
             using (var scope = app.Services.CreateScope())
@@ -62,11 +72,13 @@ namespace BussPushNotification
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.MapDefaultControllerRoute();
             app.UseRouting();
+            app.UseHttpMethodOverride();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
