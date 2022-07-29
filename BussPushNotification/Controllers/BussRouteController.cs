@@ -19,11 +19,14 @@ namespace BussPushNotification.Controllers
         IApiRepositroy db;
         private readonly IHttpClientFactory _httpClientFactory;
         string? apiKey;
-        public BussRouteController(IApiRepositroy db, IHttpClientFactory httpClientFactory)
+        string WorldStations;
+        IMemoryCache cashe;
+        public BussRouteController(IApiRepositroy db, IHttpClientFactory httpClientFactory, IMemoryCache memory)
         {
             this.db = db;
             apiKey = db.GetItemAsync("schedule").Result.Apikey;
             _httpClientFactory = httpClientFactory;
+            cashe = memory;
         }
 
         // GET: api/<BussRouteController>
@@ -33,30 +36,15 @@ namespace BussPushNotification.Controllers
             var client = _httpClientFactory.CreateClient("station_listAPI");
             try
             {
-                //HttpResponseMessage response = await client.GetAsync($"?apikey={apiKey}");
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    // Get the response stream
-                //    var stream = await response.Content.ReadAsStreamAsync();
 
-                //    // Determine the content type based on the response headers or set it explicitly
-                //    var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-
-                //    // Return the file content as a FileStreamResult
-                //    return new FileStreamResult(stream, new MediaTypeHeaderValue(contentType).ToString())
-                //    {
-                //        FileDownloadName = "cities.json"
-                //    };
-                //}
-                //else return NotFound();
-                HttpResponseMessage response = await client.GetAsync($"?apikey={apiKey}");
-                if (response.IsSuccessStatusCode)
+                HttpResponseMessage respone = await client.GetAsync($"?apikey={apiKey}");
+                if (respone.IsSuccessStatusCode)
                 {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var res = JsonConvert.DeserializeObject<Root>(jsonResponse);
-                    return Content(jsonResponse, "application/json");
+                    cashe.Set(apiKey, await respone.Content.ReadAsStringAsync());
+                    return Ok();
                 }
                 else return NotFound();
+                
             }
             catch (Exception ex)
             {
@@ -65,12 +53,42 @@ namespace BussPushNotification.Controllers
         }
 
         // GET api/<BussRouteController>/5
-        [HttpGet("{id}")]
-        public async Task<string> Get(string id)
+        [HttpGet("{Country}/{Region}/{Settlement}")]
+        public IActionResult GetStations(string Country, string Region, string Settlement)
         {
-            return db.GetItemAsync(id).Result.Apikey;
+            Country = Country.ToLowerInvariant();
+            Region = Region.ToLowerInvariant();
+            Settlement = Settlement.ToLowerInvariant();
+            if (cashe.TryGetValue(apiKey, out WorldStations))
+            {
+                Root StationList = JsonConvert.DeserializeObject<Root>(WorldStations);
+                var res = StationList.Countries
+                                        .Where(c => c.Title.ToLowerInvariant() == Country)
+                                        .SelectMany(c => c.Regions)
+                                        .Where(r => r.Title.ToLowerInvariant().Contains(Region))
+                                        .SelectMany(r => r.Settlements)
+                                        .Where(s => s.Title.ToLowerInvariant() == Settlement)
+                                        .SelectMany(s => s.Stations)
+                                        .Where(s => s.Station_type == "bus_stop")
+                                        .ToList();
+                if (res.Count == 0) return NotFound();
+                return Ok(res);
+            }
+            else
+            {
+                return NotFound("First you need to get world stations");
+            }
         }
-
+        [HttpGet]
+        public async IActionResult GetSchedule(string code)
+        {
+            var client = _httpClientFactory.CreateClient("schedule");
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"?apikey={apiKey}");
+                
+            }
+        }
         // POST api/<BussRouteController>
         [HttpPost]
         public void Post([FromBody] string value)
