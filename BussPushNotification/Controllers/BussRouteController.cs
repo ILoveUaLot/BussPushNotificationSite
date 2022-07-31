@@ -7,6 +7,7 @@ using Microsoft.Extensions.ObjectPool;
 using System.Net.Http.Headers;
 using BussPushNotification.Data;
 using System.Text.Json.Nodes;
+using System.Runtime.CompilerServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,7 +41,7 @@ namespace BussPushNotification.Controllers
                 HttpResponseMessage respone = await client.GetAsync($"?apikey={apiKey}");
                 if (respone.IsSuccessStatusCode)
                 {
-                    cashe.Set(apiKey, await respone.Content.ReadAsStringAsync());
+                    cashe.Set("StationList", await respone.Content.ReadAsStringAsync());
                     return Ok();
                 }
                 else return NotFound();
@@ -59,7 +60,7 @@ namespace BussPushNotification.Controllers
             Country = Country.ToLowerInvariant();
             Region = Region.ToLowerInvariant();
             Settlement = Settlement.ToLowerInvariant();
-            if (cashe.TryGetValue(apiKey, out WorldStations))
+            if (cashe.TryGetValue("StationList", out WorldStations))
             {
                 Root StationList = JsonConvert.DeserializeObject<Root>(WorldStations);
                 var res = StationList.Countries
@@ -79,14 +80,65 @@ namespace BussPushNotification.Controllers
                 return NotFound("First you need to get world stations");
             }
         }
-        [HttpGet]
-        public async IActionResult GetSchedule(string code)
+        
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetBusRootCodes(string code)
         {
             var client = _httpClientFactory.CreateClient("schedule");
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"?apikey={apiKey}");
-                
+                HttpResponseMessage response = await client.GetAsync($"?apikey={apiKey}&station={code}&transport_types=bus&limit=500");
+                if (response.IsSuccessStatusCode)
+                {
+                    var schedule = await response.Content.ReadAsStringAsync();
+                    var res = JsonConvert.DeserializeObject<ScheduleRoot>(schedule);
+                    cashe.Set("Schedules", res);
+
+                    var BusCodes = res.Schedules.Select(x => x.Thread.Number)
+                        .Union(res.Interval_Schedules.Select(x=>x.Thread.Number));
+                    return Ok(BusCodes);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new BadHttpRequestException(ex.Message);
+            }
+        }
+        [HttpGet("{StationCode}/{BussRootCode}")]
+        public IActionResult GetBusSchedule(string BussRootCode)
+        {
+            try
+            {
+                var CashedSchedule = cashe.Get("Schedules");
+                if (CashedSchedule is ScheduleRoot)
+                {
+                    var res = (CashedSchedule as ScheduleRoot).Schedules.Where(x => x.Thread.Number == BussRootCode).Select(x => new { x.Thread.Number, x.Arrival });
+                    if (res.Count() == 0)
+                    {
+                        var res2 = (CashedSchedule as ScheduleRoot).Interval_Schedules
+                             .Where(x => x.Thread.Number == BussRootCode)
+                             .Select(x => new {x.Thread.Number, x.Thread.Interval});
+
+                        if (res2.Count() == 0)
+                            return NotFound("Unable to find schedule for this root");
+                        else
+                            return Ok(res2);
+                    }
+                    return Ok(res);
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new BadHttpRequestException(ex.Message);
             }
         }
         // POST api/<BussRouteController>
@@ -95,7 +147,7 @@ namespace BussPushNotification.Controllers
         {
         }
 
-        // PUT api/<BussRouteController>/5
+        // PUT api/<BussRouteController>/5 s9815656
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
