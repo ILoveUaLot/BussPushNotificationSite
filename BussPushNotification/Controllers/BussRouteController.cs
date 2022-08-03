@@ -20,7 +20,6 @@ namespace BussPushNotification.Controllers
         IApiRepositroy db;
         private readonly IHttpClientFactory _httpClientFactory;
         string? apiKey;
-        string WorldStations;
         IMemoryCache cashe;
         public BussRouteController(IApiRepositroy db, IHttpClientFactory httpClientFactory, IMemoryCache memory)
         {
@@ -29,38 +28,65 @@ namespace BussPushNotification.Controllers
             _httpClientFactory = httpClientFactory;
             cashe = memory;
         }
-
-        // GET: api/<BussRouteController>
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<string> GetStationList(string casheKey)
         {
-            var client = _httpClientFactory.CreateClient("station_listAPI");
-            try
+            if (!cashe.TryGetValue(casheKey, out var stationList))
             {
-
-                HttpResponseMessage respone = await client.GetAsync($"?apikey={apiKey}");
-                if (respone.IsSuccessStatusCode)
+                var client = _httpClientFactory.CreateClient("station_listAPI");
+                try
                 {
-                    cashe.Set("StationList", await respone.Content.ReadAsStringAsync());
-                    return Ok();
-                }
-                else return NotFound();
-                
-            }
-            catch (Exception ex)
-            {
-                throw new BadHttpRequestException(ex.Message);
-            }
-        }
+                    HttpResponseMessage respone = await client.GetAsync($"?apikey={apiKey}");
+                    if (respone.IsSuccessStatusCode)
+                    {
 
-        // GET api/<BussRouteController>/5
-        [HttpGet("{Country}/{Region}/{Settlement}")]
-        public IActionResult GetStations(string Country, string Region, string Settlement)
+                        stationList = await respone.Content.ReadAsStringAsync();
+                        cashe.Set(casheKey, stationList);
+                    }
+                    else throw new Exception("Failed to fetch station list");
+
+                }
+                catch (Exception ex)
+                {
+                    throw new BadHttpRequestException(ex.Message);
+                }
+            }
+            return stationList as string;
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<string> GetSchedules(string casheKey, string stationCode)
         {
+            if(!cashe.TryGetValue(casheKey, out var schedules))
+            {
+                var client = _httpClientFactory.CreateClient("schedule");
+                try
+                {
+                    HttpResponseMessage respone = await client.GetAsync($"?apikey={apiKey}&station={stationCode}&transport_types=bus&limit=500");
+                    if (respone.IsSuccessStatusCode)
+                    {
+                        schedules = await respone.Content.ReadAsStringAsync();
+                        cashe.Set(casheKey, schedules);
+                    }
+                    else throw new Exception("Failed to fetch schedules");
+                }
+                catch(Exception ex)
+                {
+                    throw new BadHttpRequestException(ex.Message);
+                }
+            }
+            return schedules as string;
+        }
+        
+        // GET api/<BussRouteController>/5
+        [HttpGet("stations/{Country}/{Region}/{Settlement}")]
+        public async Task<IActionResult> GetStations(string Country, string Region, string Settlement)
+        {
+            string WorldStations = await GetStationList("StationList");
+
             Country = Country.ToLowerInvariant();
             Region = Region.ToLowerInvariant();
             Settlement = Settlement.ToLowerInvariant();
-            if (cashe.TryGetValue("StationList", out WorldStations))
+            if (!string.IsNullOrEmpty(WorldStations))
             {
                 Root StationList = JsonConvert.DeserializeObject<Root>(WorldStations);
                 var res = StationList.Countries
@@ -77,68 +103,51 @@ namespace BussPushNotification.Controllers
             }
             else
             {
-                return NotFound("First you need to get world stations");
+                return NotFound("Cant to receive station list for requested location");
             }
         }
-        
-        [HttpGet("{code}")]
+
+        [HttpGet("codes/{code}")]
         public async Task<IActionResult> GetBusRootCodes(string code)
         {
-            var client = _httpClientFactory.CreateClient("schedule");
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync($"?apikey={apiKey}&station={code}&transport_types=bus&limit=500");
-                if (response.IsSuccessStatusCode)
-                {
-                    var schedule = await response.Content.ReadAsStringAsync();
-                    var res = JsonConvert.DeserializeObject<ScheduleRoot>(schedule);
-                    cashe.Set("Schedules", res);
+            string schedule = await GetSchedules("Schedules", code);
 
-                    var BusCodes = res.Schedules.Select(x => x.Thread.Number)
-                        .Union(res.Interval_Schedules.Select(x=>x.Thread.Number));
-                    return Ok(BusCodes);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch(Exception ex)
+            if (!string.IsNullOrEmpty(schedule))
             {
-                throw new BadHttpRequestException(ex.Message);
+                ScheduleRoot scheduleRoot = JsonConvert.DeserializeObject<ScheduleRoot>(schedule);
+                var BusCodes = scheduleRoot.Schedules.Select(x => x.Thread.Number)
+                        .Union(scheduleRoot.Interval_Schedules.Select(x => x.Thread.Number));
+                return Ok(BusCodes);
+            }
+            else
+            {
+                return NotFound("Cant to receive schedules for this station");
             }
         }
-        [HttpGet("{StationCode}/{BussRootCode}")]
-        public IActionResult GetBusSchedule(string BussRootCode)
+        [HttpGet("schedules/{StationCode}/{BussRootCode}")]
+        public async Task<IActionResult> GetBusSchedule(string StationCode,string BussRootCode)
         {
-            try
+            string schedule = await GetSchedules("Schedules", StationCode);
+            if (!string.IsNullOrEmpty(schedule))
             {
-                var CashedSchedule = cashe.Get("Schedules");
-                if (CashedSchedule is ScheduleRoot)
+                ScheduleRoot scheduleRoot = JsonConvert.DeserializeObject<ScheduleRoot>(schedule);
+                var res = scheduleRoot.Schedules
+                        .Where(x => x.Thread.Number == BussRootCode)
+                        .Select(x => new { x.Thread.Number, x.Arrival });
+                if (res.Count() == 0)
                 {
-                    var res = (CashedSchedule as ScheduleRoot).Schedules.Where(x => x.Thread.Number == BussRootCode).Select(x => new { x.Thread.Number, x.Arrival });
-                    if (res.Count() == 0)
-                    {
-                        var res2 = (CashedSchedule as ScheduleRoot).Interval_Schedules
-                             .Where(x => x.Thread.Number == BussRootCode)
-                             .Select(x => new {x.Thread.Number, x.Thread.Interval});
+                    var res2 = scheduleRoot.Interval_Schedules
+                         .Where(x => x.Thread.Number == BussRootCode)
+                         .Select(x => new { x.Thread.Number, x.Thread.Interval });
 
-                        if (res2.Count() == 0)
-                            return NotFound("Unable to find schedule for this root");
-                        else
-                            return Ok(res2);
-                    }
-                    return Ok(res);
-
+                    return res2.Count() == 0 ? NotFound("Unable to find schedule for this root")
+                                      : Ok(res2);
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(res);
             }
-            catch (Exception ex)
+            else
             {
-                throw new BadHttpRequestException(ex.Message);
+                return NotFound();
             }
         }
         // POST api/<BussRouteController>
