@@ -10,10 +10,12 @@ namespace BussPushNotification.Controllers
     public class AccountController : Controller
     {
         public UserManager<IdentityUser> UserManager { get; private set; }
-        public Account AccountInfo { get; private set; }
-        public AccountController(UserManager<IdentityUser> userManager)
+        public SignInManager<IdentityUser> _signInManager;
+        public Account AccountInfo { get; private set; } 
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             UserManager = userManager;
+            _signInManager = signInManager;
         }
         
         [HttpGet("/Profile/{Id}")]
@@ -29,8 +31,9 @@ namespace BussPushNotification.Controllers
             return View(AccountInfo);
         }
 
-        [HttpPost("/Profile/{Id}")]
-        public async Task<ViewResult> Profile(Account acc)
+        //TODO:
+        [HttpPost("/Profile/{Id}/Update")]
+        public async Task<IActionResult> AccountUpdate(string id, Account acc)
         {
             if(ModelState.IsValid)
             {
@@ -49,14 +52,16 @@ namespace BussPushNotification.Controllers
                 if (result.Succeeded)
                 {
                     AccountInfo = acc;
-                    return View(AccountInfo);
+                    return RedirectToAction("Profile", new {id=AccountInfo.Id});
                 }
                 foreach(IdentityError err in result.Errors)
                 {
                     ModelState.AddModelError("", err.Description);
                 }    
             }
-            return View();
+            return View("Profile", acc);
         }
+
+
     }
 }
