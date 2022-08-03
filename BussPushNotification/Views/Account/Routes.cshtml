@@ -1,15 +1,17 @@
-﻿<table class="table">
-    <thead>
+﻿<table class="table m-5">
+    <thead style="font-size: 32px;
+                  text-align:center">
         <tr>
-            <th scope="col">Stop name</th>
-            <th scope="col">Root number</th>
+            <th scope="col">Title</th>
+            <th scope="col">Route</th>
             <th scope="col">Arrival</th>
             <th scope="col">Delay</th>
         </tr>
     </thead>
-    <tbody>
-        @*@foreach (var item in )
-        {*@
+    <tbody style="font-size: 24px;
+                  text-align:center">
+        @foreach (var item in Model)
+        {
             <tr>
                 <td>
                     Гатчина, Въезд
@@ -24,6 +26,6 @@
                     10 минут
                 </td>
             </tr>
-       @* }*@
+        }
     </tbody>
 </table>
