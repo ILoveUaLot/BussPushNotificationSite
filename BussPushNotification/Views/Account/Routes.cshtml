@@ -1,4 +1,5 @@
-﻿<table class="table m-5">
+﻿@model List<Route>
+<table class="table m-5">
     <thead style="font-size: 32px;
                   text-align:center">
         <tr>
@@ -14,18 +15,22 @@
         {
             <tr>
                 <td>
-                    Гатчина, Въезд
+                    @item.Title
                 </td>
                 <td>
-                    К18
+                    @item.RouteNumber
                 </td>
                 <td>
-                    8:30
+                    @item.Arrival
                 </td>
                 <td>
-                    10 минут
+                    @item.delay.ToString()
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<a class="btn d-flex align-items-center justify-content-between p-0 m-5" style="width: 100px;">
+    <i class="bi bi-plus-circle-fill flex-row" style="color: cornflowerblue; font-size:32px;"></i>
+    <h3 class="flex-row m-0">Add</h3>
+</a>
