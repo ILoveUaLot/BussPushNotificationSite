@@ -32,7 +32,7 @@ namespace BussPushNotification.Controllers
         }
 
         //TODO:
-        [HttpPost("/Profile/{Id}/Update")]
+        [HttpPost("{Id}/Update")]
         public async Task<IActionResult> AccountUpdate(string id, Account acc)
         {
             if(ModelState.IsValid)
@@ -61,7 +61,5 @@ namespace BussPushNotification.Controllers
             }
             return View("Profile", acc);
         }
-
-
     }
 }
