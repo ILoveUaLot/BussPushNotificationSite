@@ -54,9 +54,9 @@ namespace BussPushNotification.Controllers
             return stationList as string;
         }
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<string> GetSchedules(string casheKey, string stationCode)
+        public async Task<string> GetSchedules(string stationCode)
         {
-            if(!cashe.TryGetValue(casheKey, out var schedules))
+            if(!cashe.TryGetValue(stationCode, out var schedules))
             {
                 var client = _httpClientFactory.CreateClient("schedule");
                 try
@@ -65,9 +65,9 @@ namespace BussPushNotification.Controllers
                     if (respone.IsSuccessStatusCode)
                     {
                         schedules = await respone.Content.ReadAsStringAsync();
-                        cashe.Set(casheKey, schedules);
+                        cashe.Set(stationCode, schedules);
                     }
-                    else throw new Exception("Failed to fetch schedules");
+                    else throw new Exception("Not found. Failed to get schedule of station.");
                 }
                 catch(Exception ex)
                 {
@@ -78,7 +78,7 @@ namespace BussPushNotification.Controllers
         }
         
         // GET api/<BussRouteController>/5
-        [HttpGet("stations/{Country}/{Region}/{Settlement}")]
+        [HttpGet("stations/{Country}&{Region}&{Settlement}")]
         public async Task<IActionResult> GetStations(string Country, string Region, string Settlement)
         {
             string WorldStations = await GetStationList("StationList");
@@ -108,9 +108,9 @@ namespace BussPushNotification.Controllers
         }
 
         [HttpGet("codes/{code}")]
-        public async Task<IActionResult> GetBusRootCodes(string code)
+        public async Task<IActionResult> GetBusRouteCodes(string code)
         {
-            string schedule = await GetSchedules("Schedules", code);
+            string schedule = await GetSchedules(code);
 
             if (!string.IsNullOrEmpty(schedule))
             {
@@ -127,7 +127,7 @@ namespace BussPushNotification.Controllers
         [HttpGet("schedules/{StationCode}/{BussRootCode}")]
         public async Task<IActionResult> GetBusSchedule(string StationCode,string BussRootCode)
         {
-            string schedule = await GetSchedules("Schedules", StationCode);
+            string schedule = await GetSchedules(StationCode);
             if (!string.IsNullOrEmpty(schedule))
             {
                 ScheduleRoot scheduleRoot = JsonConvert.DeserializeObject<ScheduleRoot>(schedule);
