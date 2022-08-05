@@ -49,6 +49,11 @@ namespace BussPushNotification
             {
                 client.BaseAddress = new Uri("https://api.rasp.yandex.net/v3.0/stations_list/");
             });
+            builder.Services.AddHttpClient("schedule", client =>
+            {
+                client.BaseAddress = new Uri("https://api.rasp.yandex.net/v3.0/schedule/");
+            });
+            builder.Services.Configure<RouteApiSettings>(builder.Configuration.GetSection("RouteApiSettings"));
             var app = builder.Build();
 
             // Проверяем подключение к базе данных
