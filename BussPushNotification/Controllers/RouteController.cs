@@ -1,41 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BussPushNotification.Data.Interface;
+using BussPushNotification.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Route = BussPushNotification.Models.Route;
 namespace BussPushNotification.Controllers
 {
     public class RouteController : Controller
     {
-        // GET: RouteController
-        public ActionResult Index()
+        public readonly IHttpClientFactory _httpClient;
+        public readonly RouteApiSettings _apiSettings;
+        public RouteController(IOptions<RouteApiSettings> apiSettings, IHttpClientFactory httpClient, IApiRepository)
         {
-            return View();
-        }
+            _httpClient = httpClient;
+            _apiSettings = apiSettings.Value;
 
-        // GET: RouteController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: RouteController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RouteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         [HttpGet("/Routes")]
@@ -48,40 +28,35 @@ namespace BussPushNotification.Controllers
             return View(routes);
         }
 
-        // POST: RouteController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: RouteController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet("/Routes/Add")]
+        public ViewResult AddRoutes()
         {
             return View();
         }
 
-        // POST: RouteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpPost("/Routes/Add")]
+        public async Task<IActionResult> FindStations(string country, string region, string settlement, string street)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            string apiUrl = $"{_apiSettings.BaseUrl}/api/BussRoute/";
+            var client = _httpClient.CreateClient();
+            client.BaseAddress = new Uri(apiUrl);
+
+            string jsonStations = await client.GetAsync($"stations/{country}/{region}/{settlement}").Result.Content.ReadAsStringAsync();
+            
+            List<StationDetails> stationsList= JsonConvert.DeserializeObject<List<StationDetails>>(jsonStations);
+
+            var tasks = stationsList.Select(station =>
+                Task.Run(async () =>
+                {
+                    var response = await client.GetAsync($"StationRoutes/{station.Сodes.yandex_code}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        station.BussRoutes.Add(await response.Content.ReadAsStringAsync());
+                    }
+                })).ToArray();
+
+            await Task.WhenAll(tasks);
+            return Ok(stationsList);
         }
     }
 }
