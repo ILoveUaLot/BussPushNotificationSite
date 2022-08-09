@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BussPushNotification.Data.Repository
 {
-    public class SQLApiRepository : IApiRepositroy
+    public class SQLApiRepository : IApiRepository
     {
         BussNotificationContext db;
         public SQLApiRepository(BussNotificationContext db)
@@ -12,9 +12,10 @@ namespace BussPushNotification.Data.Repository
             this.db = db;
         }
 
-        public async Task CreateAsync(Api item)
+        public async Task Create(Api item)
         {
-            await db.Apis.AddAsync(item);
+            db.Apis.Add(item);
+            await db.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Api item)
@@ -25,7 +26,8 @@ namespace BussPushNotification.Data.Repository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            GC.Collect(1);
+            db.Dispose();
         }
 
         public async Task<Api> GetItemAsync(string id)

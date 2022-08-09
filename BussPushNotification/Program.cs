@@ -26,7 +26,7 @@ namespace BussPushNotification
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().
                 AddEntityFrameworkStores<BussNotificationContext>();
             builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
-            builder.Services.AddScoped<IApiRepositroy, SQLApiRepository>();
+            builder.Services.AddScoped<IApiRepository, SQLApiRepository>();
             builder.Services.Configure<IdentityOptions>(opts =>
             {
                 opts.Password.RequiredLength = 6;
