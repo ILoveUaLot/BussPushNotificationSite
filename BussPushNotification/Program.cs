@@ -53,6 +53,10 @@ namespace BussPushNotification
             {
                 client.BaseAddress = new Uri("https://api.rasp.yandex.net/v3.0/schedule/");
             });
+            builder.Services.AddHttpClient("geocoder", client =>
+            {
+                client.BaseAddress = new Uri("https://geocode-maps.yandex.ru/1.x/");
+            });
             builder.Services.Configure<RouteApiSettings>(builder.Configuration.GetSection("RouteApiSettings"));
             var app = builder.Build();
 
