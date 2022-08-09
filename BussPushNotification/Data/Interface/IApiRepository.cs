@@ -2,7 +2,7 @@
 
 namespace BussPushNotification.Data.Interface
 {
-    public interface IApiRepositroy : IRepository<Api, string>
+    public interface IApiRepository : IRepository<Api, string>
     {
 
     }
