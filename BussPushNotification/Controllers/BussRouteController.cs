@@ -17,11 +17,11 @@ namespace BussPushNotification.Controllers
     [ApiController]
     public class BussRouteController : ControllerBase
     {
-        IApiRepositroy db;
+        IApiRepository db;
         private readonly IHttpClientFactory _httpClientFactory;
         string? apiKey;
         IMemoryCache cashe;
-        public BussRouteController(IApiRepositroy db, IHttpClientFactory httpClientFactory, IMemoryCache memory)
+        public BussRouteController(IApiRepository db, IHttpClientFactory httpClientFactory, IMemoryCache memory)
         {
             this.db = db;
             apiKey = db.GetItemAsync("schedule").Result.Apikey;
@@ -74,11 +74,11 @@ namespace BussPushNotification.Controllers
                     throw new BadHttpRequestException(ex.Message);
                 }
             }
-            return schedules as string;
+            return schedules as string; 
         }
         
         // GET api/<BussRouteController>/5
-        [HttpGet("stations/{Country}&{Region}&{Settlement}")]
+        [HttpGet("stations/{Country}/{Region}/{Settlement}")]
         public async Task<IActionResult> GetStations(string Country, string Region, string Settlement)
         {
             string WorldStations = await GetStationList("StationList");
@@ -107,7 +107,7 @@ namespace BussPushNotification.Controllers
             }
         }
 
-        [HttpGet("codes/{code}")]
+        [HttpGet("StationRoutes/{code}")]
         public async Task<IActionResult> GetBusRouteCodes(string code)
         {
             string schedule = await GetSchedules(code);

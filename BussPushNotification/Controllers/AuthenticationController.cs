@@ -37,8 +37,7 @@ namespace BussPushNotification.Controllers
                 if (result.Succeeded)
                 {
                     return userModel.ReturnUrl != null ? RedirectToPage(userModel.ReturnUrl)
-                        : RedirectToAction("Profile","Account", new {id = User.FindFirstValue(ClaimTypes.NameIdentifier)
-                        });
+                        : RedirectToAction("Profile","Account", new {id = User.FindFirstValue(ClaimTypes.NameIdentifier)});
                 }
                 ModelState.AddModelError("", "Invalid username or password");
             }
