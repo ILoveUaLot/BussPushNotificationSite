@@ -5,7 +5,7 @@ namespace BussPushNotification
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddControllersWithViews();
             // Add services to the container.
             builder.Services.AddRazorPages();
 
@@ -21,7 +21,7 @@ namespace BussPushNotification
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.MapDefaultControllerRoute();
             app.UseRouting();
 
             app.UseAuthorization();
