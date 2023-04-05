@@ -3,6 +3,11 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
+*,
+*:before,
+*:after{
+    box-sizing:border-box;
+}
 body {
     margin: 0;
     font-family: 'Eras ITC', serif;
@@ -68,17 +73,16 @@ body {
 /* Styles for the nav links */
 .nav-link {
     display: inline-block;
+    margin: 20px;
     vertical-align: top;
     color: #333;
     text-decoration: none;
-    margin: 20px;
-    padding: 5px 0;
     transition: color .3s linear;
 
 }
 
 /* Styles for the nav links on hover */
-.nav-link:hover {
-    color: #1050e6;
-    border-bottom: 2px solid #ff0000;
-}
+    .nav-link:hover {
+        color: #1050e6;
+        border-bottom: 2px solid #ff0000;
+    }
