@@ -102,6 +102,9 @@ body {
     padding: 80px 0;
 }
 
-.section-header{
+.section-header {
+    width: 100%;
+    max-width: 1000px;
     margin: 40px 0 40px 0;
+    text-align: center;
 }
