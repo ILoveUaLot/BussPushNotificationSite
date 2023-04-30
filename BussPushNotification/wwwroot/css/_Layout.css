@@ -3,11 +3,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-html {
-    position: relative;
-    min-height: 100%;
-}
-
 body {
     margin: 0;
     font-family: 'Eras ITC', serif;
@@ -23,7 +18,7 @@ body {
 /* Styles for the container div */
 .container {
     width: 100%;
-    max-width: 1920px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -101,4 +96,12 @@ body {
 
 .nav-link:hover::after {
     opacity: 1;
+}
+
+.section{
+    padding: 80px 0;
+}
+
+.section-header{
+    margin: 40px 0 40px 0;
 }
