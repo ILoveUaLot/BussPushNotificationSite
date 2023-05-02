@@ -1,4 +1,10 @@
-﻿/* Reset the margin of all heading elements */
+﻿@font-face {
+    font-family: 'Ultra';
+    src: url('../Fonts/Ultra-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/* Reset the margin of all heading elements */
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
@@ -24,15 +30,17 @@ body {
 
 /* Styles for the header section */
 .header {
-    width: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    z-index: 4;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
     height: 80px;
+    background-color: #fff;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* добавить тень для header */
+    overflow: hidden; /* добавить свойство overflow */
+    text-overflow: ellipsis; /* добавить свойство text-overflow, чтобы скрыть текст, который не помещается */
+    white-space: nowrap; /* добавить свойство white-space, чтобы текст не переносился */
 }
 
 .header-inner {
@@ -100,11 +108,27 @@ body {
 
 .section{
     padding: 80px 0;
+    
 }
 
 .section-header {
     width: 100%;
     max-width: 1000px;
-    margin: 40px 0 40px 0;
+    margin: 40px auto;
     text-align: center;
+}
+
+.section-title{
+    font-family: Ultra;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.section-title:after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    margin: 30px auto;
+    background-color: #db0762;
 }
