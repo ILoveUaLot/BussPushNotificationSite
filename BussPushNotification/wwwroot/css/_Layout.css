@@ -139,6 +139,7 @@ body {
 }
 
 .section-text{
+    margin-bottom: 50px;
     font-family: Roboto;
     font-style: normal;
     font-weight: 400;
