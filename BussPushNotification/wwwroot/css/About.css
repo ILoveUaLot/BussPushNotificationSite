@@ -4,6 +4,7 @@
 }
 
 .about-item {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,4 +62,28 @@
 
 .about-img.radial-gradient::before {
     border-radius: 100%;
+}
+
+.about-text{
+    width: 100%;
+
+    font-family: Roboto;
+    color: #fff;
+    text-transform:uppercase;
+    font-size: 24px;
+    font-weight: 800;
+    text-align: center;
+    opacity:0;
+
+    position:absolute;
+    top:50%;
+    left:0;
+    z-index:2;
+    transform: translate3d(0,-50%,0);
+
+    transition: opacity .1s linear;
+}
+
+.about-item:hover .about-text{
+    opacity:1;
 }
