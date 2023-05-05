@@ -1,0 +1,108 @@
+﻿@font-face {
+    font-family: "Roboto";
+    src: url('../Fonts/Roboto/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.ttf') format('truetype');
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-form {
+    width: 300px;
+    background-color: #ffffff;
+    border: 1px solid #dbdbdb;
+    border-radius: 1px;
+    padding: 20px 40px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.login-text {
+    font-family: Ultra;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.login-form input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    background-color: #fafafa;
+}
+
+.login-form input:focus {
+    outline: thin;
+    border-color: #b2b2b2;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 0;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    background-color: #3897f0;
+    cursor: pointer;
+    transition: background-color .5s;
+}
+
+.login-form button:hover {
+    background-color: #2d7ac2;
+}
+
+.login-separator {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+    text-transform: uppercase;
+    padding: 10px 0;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.login-separator::before,
+.login-separator::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background-color: #333;
+    margin: 0 10px;
+}
+
+.registration-link {
+    font-size: 18px;
+    color: #2d7ac2;
+    text-transform: uppercase;
+}
+
+.registration-link a {
+    text-decoration:none;
+    border-bottom: 0;
+    font-weight: bold;
+    color: #2d7ac2;
+    transition: all 0.3s ease;
+}
+
+.registration-link a:hover {
+    color: #3897f0;
+}
