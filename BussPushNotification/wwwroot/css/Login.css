@@ -89,20 +89,27 @@ body {
     margin: 0 10px;
 }
 
-.registration-link {
+.alternative-items {
+    width: 100%;
+    box-sizing:border-box;
+    display: inline-flex;
+    justify-content: space-between;
+    padding: 0 40px; 
+}
+.alternative-item {
     font-size: 18px;
     color: #2d7ac2;
     text-transform: uppercase;
 }
 
-.registration-link a {
-    text-decoration:none;
+.alternative-item a {
+    text-decoration: none;
     border-bottom: 0;
     font-weight: bold;
     color: #2d7ac2;
     transition: all 0.3s ease;
 }
 
-.registration-link a:hover {
+.alternative-item a:hover {
     color: #3897f0;
 }
