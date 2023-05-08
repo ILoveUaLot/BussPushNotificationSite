@@ -10,10 +10,9 @@ namespace BussPushNotification.Data.Repository
 
         private bool disposedValue;
 
-        public SQLUserRepository(IApplicationBuilder app)
+        public SQLUserRepository(BussNotificationContext context)
         {
-            db = app.ApplicationServices.CreateScope().
-                ServiceProvider.GetRequiredService<BussNotificationContext>();
+            db = context;
         }
 
         public void Create(User item)
