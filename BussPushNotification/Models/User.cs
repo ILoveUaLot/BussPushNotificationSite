@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace BussPushNotification.Models
+﻿namespace BussPushNotification.Models
 {
     public class User
     {
