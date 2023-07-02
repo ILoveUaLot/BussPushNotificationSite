@@ -35,18 +35,11 @@ namespace BussPushNotification.Controllers
                     UserName = userModel.UserName,
                     UserEmail = userModel.UserEmail,
                     UserPassword = userModel.UserPassword,
-                }
+                };
                 db.Create(user);
                 db.Save();
                 return View("Login");
             }
-            //foreach (var modelState in ModelState.Values)
-            //{
-            //    foreach (var error in modelState.Errors)
-            //    {
-            //        Console.WriteLine(error.ErrorMessage);
-            //    }
-            //}
             return View();
         }
     }
