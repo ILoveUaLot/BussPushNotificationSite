@@ -19,7 +19,7 @@ namespace BussPushNotification
             builder.Services.AddDbContext<BussNotificationContext>(opts =>
                 opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
-            builder.Services.AddScoped<IRepository<User>, SQLUserRepository>();
+            builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
             var app = builder.Build();
             // Проверяем подключение к базе данных
             //TODO: позже удалить
@@ -63,12 +63,12 @@ namespace BussPushNotification
                 endpoints.MapControllerRoute(
                     name: "login",
                     pattern: "Login",
-                    defaults: new { controller = "Login", action = "Index" });
+                    defaults: new { controller = "Authentication", action = "Login" });
 
                 endpoints.MapControllerRoute(
                     name: "registration",
                     pattern:"SignUp",
-                    defaults: new {controller = "Login", action = "SignUpForm"}
+                    defaults: new {controller = "Authentication", action = "SignUpForm"}
                     );
             });
             
