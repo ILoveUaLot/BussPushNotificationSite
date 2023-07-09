@@ -3,6 +3,7 @@ using BussPushNotification.Data;
 using BussPushNotification.Data.Interface;
 using BussPushNotification.Data.Repository;
 using BussPushNotification.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -19,6 +20,8 @@ namespace BussPushNotification
             builder.Services.AddDbContext<BussNotificationContext>(opts =>
                 opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().
+                AddEntityFrameworkStores<BussNotificationContext>();
             builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
             var app = builder.Build();
             // Проверяем подключение к базе данных
