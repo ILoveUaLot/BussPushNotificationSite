@@ -1,6 +1,8 @@
-﻿namespace BussPushNotification.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace BussPushNotification.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         public Guid UserID { get; set; }
         public string UserName { get; set; } = string.Empty;
