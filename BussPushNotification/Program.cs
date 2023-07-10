@@ -50,6 +50,7 @@ namespace BussPushNotification
             app.UseStaticFiles();
             app.MapDefaultControllerRoute();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
