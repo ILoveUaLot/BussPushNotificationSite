@@ -8,6 +8,11 @@ namespace BussPushNotification.Pages.Users
     public class CreateModel : AdminPageModel
     {
         public UserManager<IdentityUser> UserManager { get; set; }
+        public CreateModel(UserManager<IdentityUser> userManager)
+        {
+            UserManager = userManager;
+        }
+
         [BindProperty]
         public string UserName { get; set; }
         [BindProperty]
