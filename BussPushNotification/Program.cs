@@ -23,6 +23,14 @@ namespace BussPushNotification
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().
                 AddEntityFrameworkStores<BussNotificationContext>();
             builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+            builder.Services.Configure<IdentityOptions>(opts =>
+            {
+                opts.Password.RequiredLength = 6;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireLowercase = true;
+                opts.Password.RequireUppercase = true;
+                opts.Password.RequireDigit = true;
+            });
             var app = builder.Build();
             // Проверяем подключение к базе данных
             //TODO: позже удалить
