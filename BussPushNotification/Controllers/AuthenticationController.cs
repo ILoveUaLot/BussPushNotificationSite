@@ -9,8 +9,8 @@ namespace BussPushNotification.Controllers
 {
     public class AuthenticationController : Controller
     {
-        IRepository<User> db;
-        public AuthenticationController(IRepository<User> repository)
+        IUserRepository db;
+        public AuthenticationController(IUserRepository repository)
         {
             db = repository;
         }
@@ -41,7 +41,7 @@ namespace BussPushNotification.Controllers
                     UserID = Guid.NewGuid(),
                     UserName = userModel.UserName,
                     UserEmail = userModel.UserEmail,
-                    UserPassword = userModel.UserPassword,
+                    UserPassword = userModel.UserPassword
                 };
                 db.Create(user);
                 db.Save();
