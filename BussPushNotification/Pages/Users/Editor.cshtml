@@ -1,0 +1,27 @@
+﻿@page "{id}"
+@model BussPushNotification.Pages.Users.EditorModel
+<h5 class="bg-warning text-white text-center p-2">Edit user</h5>
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="card-group">
+        <label>ID</label>
+        <input class="form-control" asp-for="Id" disabled />
+        <input asp-for="Id" hidden />
+    </div>
+    <div class="card-group">
+        <label>User Name</label>
+        <input asp-for="Name" class="form-control"/>
+    </div>
+    <div class="card-group">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control"/>
+    </div>
+    <div class="card-group">
+        <label>New Password</label>
+        <input asp-for="Password" class="form-control"/>
+    </div>
+    <div class="py-2">
+        <button type="submit" class="btn btn-warning">Submit</button>
+        <a class="btn btn-secondary" asp-page="list">Back</a>
+    </div>
+</form>
