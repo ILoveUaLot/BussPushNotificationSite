@@ -12,10 +12,9 @@ namespace BussPushNotification.Data.Repository
             this.db = db;
         }
 
-        public async Task Create(Api item)
+        public async Task CreateAsync(Api item)
         {
-            db.Apis.Add(item);
-            await db.SaveChangesAsync();
+            db.Apis.AddAsync(item);
         }
 
         public async Task DeleteAsync(Api item)
