@@ -16,19 +16,20 @@ namespace BussPushNotification.Data.Repository
             db = context;
         }
         
-        public void Create(IdentityUser item)
+        public async Task CreateAsync(IdentityUser item)
         {
-            db.Add(item);
+            await db.AddAsync(item);
         }
 
-        public void Delete(IdentityUser item)
+        public async Task DeleteAsync(IdentityUser item)
         {
             db.Remove(item);
+            await Task.CompletedTask;
         }
 
-        public IdentityUser GetItem(Guid id)
+        public async Task<IdentityUser> GetItemAsync(Guid id)
         {
-            return db.Users.Find(id);
+            return await db.Users.FindAsync(id);
         }
 
         public IQueryable<IdentityUser> GetList()
@@ -36,9 +37,9 @@ namespace BussPushNotification.Data.Repository
             return db.Users;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         public void Update(IdentityUser item)
