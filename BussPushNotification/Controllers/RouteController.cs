@@ -1,6 +1,8 @@
-﻿using BussPushNotification.Data.Interface;
+﻿using BussPushNotification.Data;
+using BussPushNotification.Data.Interface;
 using BussPushNotification.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,11 +13,14 @@ namespace BussPushNotification.Controllers
     {
         public readonly IHttpClientFactory _httpClient;
         public readonly RouteApiSettings _apiSettings;
-        public RouteController(IOptions<RouteApiSettings> apiSettings, IHttpClientFactory httpClient, IApiRepository)
+        public readonly IApiRepository apiKeyRepository;
+        public readonly IMemoryCache cache;
+        public RouteController(IOptions<RouteApiSettings> apiSettings, IHttpClientFactory httpClient, IApiRepository apiRepository, IMemoryCache cache)
         {
             _httpClient = httpClient;
             _apiSettings = apiSettings.Value;
-
+            apiKeyRepository = apiRepository;
+            this.cache = cache;
         }
 
         [HttpGet("/Routes")]
@@ -57,6 +62,35 @@ namespace BussPushNotification.Controllers
 
             await Task.WhenAll(tasks);
             return Ok(stationsList);
+        }
+
+        [HttpGet("/Routes/GetLocation")]
+        public async Task<IActionResult> GetLocation(string location)
+        {
+            HttpClient client = _httpClient.CreateClient("geocoder");
+            location = "Гатчина проспект 25 октября";
+            string apikey = (await apiKeyRepository.GetItemAsync("geocoder")).Apikey;
+            HttpResponseMessage response = await client.GetAsync($"?apikey={apikey}&geocode={location}&format=json");
+            if (response.IsSuccessStatusCode)
+            {
+                string res = await response.Content.ReadAsStringAsync();
+                JObject geoJson = JObject.Parse(res);
+
+                var metaData = geoJson.SelectTokens("response.GeoObjectCollection.featureMember[0].GeoObject").Select(x => new
+                {
+                    Point = x.SelectToken("Point"),
+                    BoundedBy = x.SelectToken("boundedBy"),
+                    Text = x.SelectToken("metaDataProperty.GeocoderMetaData.text")
+                }).First();
+                GeoMetaData geo = new()
+                {
+                    Address = metaData.Text.ToString(),
+                    Center = metaData.Point.ToObject<Point>(),
+                    Area = metaData.BoundedBy.ToObject<Area>()
+                };
+                return Ok(geo);
+            }
+            return NotFound();
         }
     }
 }
