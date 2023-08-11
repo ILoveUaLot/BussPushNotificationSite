@@ -17,9 +17,24 @@ namespace BussPushNotification.Data
 
     public class Area
     {
-        [JsonProperty("Envelope")]
-        [JsonConverter(typeof(EnvelopeToPointArrayConverter))]
-        public Point[] Points { get; set; }
+        private Point[] points;
+        public Area([JsonProperty("Envelope")][JsonConverter(typeof(EnvelopeToPointArrayConverter))] Point[] points)
+        {
+            this.points = points;
+        }
+
+
+        public KeyValuePair<string, Point>[] Corners
+        {
+            get
+            {
+                return new[]
+                {
+                    new KeyValuePair<string, Point>("lowerCorner", points[0]),
+                    new KeyValuePair<string, Point>("upperCorner", points[1])
+                };
+            }
+        }
     }
     public class Point
     {
