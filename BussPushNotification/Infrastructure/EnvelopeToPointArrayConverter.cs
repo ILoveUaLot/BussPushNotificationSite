@@ -8,8 +8,7 @@ namespace BussPushNotification.Infrastructure
     {
         public override Point[]? ReadJson(JsonReader reader, Type objectType, Point[]? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            JObject jsonObject = JObject.Load(reader);
-            JToken envelope = jsonObject["Envelope"];
+            JObject envelope = JObject.Load(reader);
 
             string lowerCorner = envelope["lowerCorner"].ToString();
             string upperCorner = envelope["upperCorner"].ToString();
