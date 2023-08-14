@@ -16,54 +16,51 @@ namespace BussPushNotification.Data
 
         public double GetRadius()
         {
-            double theta = Area.GetLowerCorner()[0]. - Area.Corners["upperCorner"].Value.Coordinates["Latitude"];
+            double lowerLatitude = Area.GetLowerCorner().Coordinates["latitude"];
+            double lowerLongitude = Area.GetLowerCorner().Coordinates["longitude"];
+            double upperLatitude = Area.GetUpperCorner().Coordinates["latitude"];
+            double upperLongitude = Area.GetUpperCorner().Coordinates["longitude"];
+            double theta = lowerLatitude - upperLatitude;
+            double distance = 60 * 1.1515 * (180 / Math.PI) * Math.Acos(
+                Math.Sin(lowerLatitude * (Math.PI / 180) * Math.Sin(upperLatitude * (Math.PI / 180)) +
+                Math.Cos(lowerLatitude * (Math.PI / 180) * Math.Cos(upperLatitude * (Math.PI / 180)) * Math.Cos(theta * (Math.PI / 180))
+            );
+            return Math.Round(distance * 1.609344, 2) / 2;
         }
     }
 
     public class Area
     {
-        private Point[] points;
+        private readonly Dictionary<string, Point> Corners;
         public Area([JsonProperty("Envelope")][JsonConverter(typeof(EnvelopeToPointArrayConverter))] Point[] points)
         {
-            this.points = points;
-        }
-
-
-        public KeyValuePair<string, Point>[] Corners
-        {
-            get
+            Corners = new Dictionary<string, Point>
             {
-                return new[]
-                {
-                    new KeyValuePair<string, Point>("lowerCorner", points[0]),
-                    new KeyValuePair<string, Point>("upperCorner", points[1])
-                };
-            }
+                { "lowerCorner", points[0] },
+                { "upperCorner", points[1] }
+            };
+        }
+        public Point GetLowerCorner()
+        {
+            return Corners["lowerCorner"];
         }
 
+        public Point GetUpperCorner()
+        {
+            return Corners["upperCorner"];
+        }
     }
     public class Point
     {
-        private string position;
         public Point([JsonProperty("pos")]string position)
         {
-            this.position = position;
-        }
-
-        public Dictionary<string,double> Coordinates
-        {
-            get
+            string[] s = position.Split(" ");
+            Coordinates = new Dictionary<string, double>
             {
-                string[] s = position.Split(" ");
-                double latitude = double.Parse(s[0]);
-                double longitude = double.Parse(s[1]);
-
-                return new Dictionary<string, double>
-                {
-                    { "latitude", latitude },
-                    { "longitude", longitude }
-                };
-            }
+                {"latitude", double.Parse(s[0]) },
+                {"longitude", double.Parse(s[1]) }
+            };
         }
+        public readonly Dictionary<string, double> Coordinates;
     }
 }
