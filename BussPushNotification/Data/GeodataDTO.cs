@@ -6,13 +6,18 @@ namespace BussPushNotification.Data
     public class GeoMetaData
     {
         [JsonProperty("Point")]
-        public Point Center { get; set; }
+        public readonly Point Center;
 
         [JsonProperty("boundedBy")]
-        public Area Area { get; set; }
+        public readonly Area Area;
 
         [JsonProperty("text")]
-        public string Address { get; set; }
+        public readonly string Address;
+
+        public double GetRadius()
+        {
+            double theta = Area.GetLowerCorner()[0]. - Area.Corners["upperCorner"].Value.Coordinates["Latitude"];
+        }
     }
 
     public class Area
@@ -35,6 +40,7 @@ namespace BussPushNotification.Data
                 };
             }
         }
+
     }
     public class Point
     {
@@ -44,12 +50,19 @@ namespace BussPushNotification.Data
             this.position = position;
         }
 
-        public KeyValuePair<string, string>[] Coordinates
+        public Dictionary<string,double> Coordinates
         {
             get
             {
-                var s = position.Split(" ");
-                return new [] { KeyValuePair.Create("latitude", s[0]), KeyValuePair.Create("longitude", s[1]) };
+                string[] s = position.Split(" ");
+                double latitude = double.Parse(s[0]);
+                double longitude = double.Parse(s[1]);
+
+                return new Dictionary<string, double>
+                {
+                    { "latitude", latitude },
+                    { "longitude", longitude }
+                };
             }
         }
     }
