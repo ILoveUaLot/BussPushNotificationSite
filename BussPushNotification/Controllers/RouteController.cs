@@ -64,8 +64,7 @@ namespace BussPushNotification.Controllers
             return Ok(stationsList);
         }
 
-        [HttpGet("/Routes/GetLocation")]
-        public async Task<IActionResult> GetLocation(string location)
+        public async Task<GeoMetaData> GetLocation(string location)
         {
             HttpClient client = _httpClient.CreateClient("geocoder");
             location = "Гатчина проспект 25 октября";
@@ -82,15 +81,12 @@ namespace BussPushNotification.Controllers
                     BoundedBy = x.SelectToken("boundedBy"),
                     Text = x.SelectToken("metaDataProperty.GeocoderMetaData.text")
                 }).First();
-                GeoMetaData geo = new()
-                {
-                    Address = metaData.Text.ToString(),
-                    Center = metaData.Point.ToObject<Point>(),
-                    Area = metaData.BoundedBy.ToObject<Area>()
-                };
-                return Ok(geo);
+                GeoMetaData geo = new GeoMetaData(metaData.Point.ToObject<Point>(),
+                                                  metaData.BoundedBy.ToObject<Area>(),
+                                                  metaData.Text.ToString());
+                return geo;
             }
-            return NotFound();
+            throw new Exception("Cant find location");
         }
     }
 }
