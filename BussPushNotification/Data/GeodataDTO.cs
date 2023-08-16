@@ -1,5 +1,6 @@
 ﻿using BussPushNotification.Infrastructure;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace BussPushNotification.Data
 {
@@ -14,6 +15,13 @@ namespace BussPushNotification.Data
         [JsonProperty("text")]
         public readonly string Address;
 
+        public GeoMetaData(Point center, Area area, string address)
+        {
+            Center = center;
+            Area = area;
+            Address = address;
+        }
+
         public double GetRadius()
         {
             double lowerLatitude = Area.GetLowerCorner().Coordinates["latitude"];
@@ -21,9 +29,11 @@ namespace BussPushNotification.Data
             double upperLatitude = Area.GetUpperCorner().Coordinates["latitude"];
             double upperLongitude = Area.GetUpperCorner().Coordinates["longitude"];
             double theta = lowerLatitude - upperLatitude;
+
+            double degree = (Math.PI / 180);
             double distance = 60 * 1.1515 * (180 / Math.PI) * Math.Acos(
-                Math.Sin(lowerLatitude * (Math.PI / 180) * Math.Sin(upperLatitude * (Math.PI / 180)) +
-                Math.Cos(lowerLatitude * (Math.PI / 180) * Math.Cos(upperLatitude * (Math.PI / 180)) * Math.Cos(theta * (Math.PI / 180))
+                Math.Sin(lowerLatitude * degree) * Math.Sin(upperLatitude * degree) +
+                Math.Cos(lowerLatitude * degree) * Math.Cos(upperLatitude * degree) * Math.Cos(theta * degree)
             );
             return Math.Round(distance * 1.609344, 2) / 2;
         }
@@ -55,10 +65,12 @@ namespace BussPushNotification.Data
         public Point([JsonProperty("pos")]string position)
         {
             string[] s = position.Split(" ");
+            var s0 = double.Parse(s[0], NumberStyles.Float, CultureInfo.InvariantCulture);
+            var s1 = double.Parse(s[1], NumberStyles.Float, CultureInfo.InvariantCulture);
             Coordinates = new Dictionary<string, double>
             {
-                {"latitude", double.Parse(s[0]) },
-                {"longitude", double.Parse(s[1]) }
+                {"latitude", s0},
+                {"longitude", s1}
             };
         }
         public readonly Dictionary<string, double> Coordinates;
