@@ -25,8 +25,22 @@ namespace BussPushNotification.Infrastructure
             return R * c;
         }
 
-        public (string country, string settlement, string region) ParsedAddress(string location)
+        public (string? country, string? region, string? settlement, string? street) ParsedAddress(string location)
         {
+            if (!string.IsNullOrEmpty(location))
+            {
+                var splittedLocation = location.Split(',');
+                if(splittedLocation.Length >= 3)
+                {
+                    string country = splittedLocation[0].Trim();
+                    string region = splittedLocation[1].Trim();
+                    string settlement = splittedLocation[2].Trim();
+                    string street = splittedLocation[3].Trim();
+                    return (country, region, settlement, street);
+                }
+            }
+
+            return (null,null,null,null);
             
         }
     }

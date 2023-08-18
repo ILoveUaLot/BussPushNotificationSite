@@ -3,6 +3,6 @@
     public interface IGeoService
     {
         double GetDistance(IArea area);
-        (string country, string settlement, string region) ParsedAddress(string location);
+        (string? country, string? region, string? settlement, string? street) ParsedAddress(string location);
     }
 }
