@@ -2,7 +2,7 @@
 {
     public interface IGeoService
     {
-        double GetRadius(IArea area);
+        double GetDistance(IArea area);
         (string country, string settlement, string region) ParsedAddress(string location);
     }
 }

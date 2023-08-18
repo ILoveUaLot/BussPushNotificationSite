@@ -4,7 +4,7 @@ namespace BussPushNotification.Infrastructure
 {
     public class GeoService : IGeoService
     {
-        public double GetRadius(IArea area)
+        public double GetDistance(IArea area)
         {
             double R = 6371.0; // radius of earth in km
 
@@ -22,7 +22,7 @@ namespace BussPushNotification.Infrastructure
 
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
-            return (R * c)/2;
+            return R * c;
         }
 
         public (string country, string settlement, string region) ParsedAddress(string location)
