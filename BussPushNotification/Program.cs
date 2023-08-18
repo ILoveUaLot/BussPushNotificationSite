@@ -2,6 +2,7 @@ using BussPushNotification.Controllers;
 using BussPushNotification.Data;
 using BussPushNotification.Data.Interface;
 using BussPushNotification.Data.Repository;
+using BussPushNotification.Infrastructure;
 using BussPushNotification.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +28,7 @@ namespace BussPushNotification
                 AddEntityFrameworkStores<BussNotificationContext>();
             builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
             builder.Services.AddScoped<IApiRepository, SQLApiRepository>();
+            builder.Services.AddTransient<IGeoService, GeoService>();
             builder.Services.Configure<IdentityOptions>(opts =>
             {
                 opts.Password.RequiredLength = 6;
