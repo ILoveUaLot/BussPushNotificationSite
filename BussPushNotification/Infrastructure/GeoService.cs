@@ -2,22 +2,32 @@
 
 namespace BussPushNotification.Infrastructure
 {
-    public class GeoService
+    public class GeoService : IGeoService
     {
         public double GetRadius(IArea area)
         {
-            double lowerLatitude = area.LowerCorner.Latitude;
-            double lowerLongitude = area.LowerCorner.Longitude;
-            double upperLatitude = area.UpperCorner.Latitude;
-            double upperLongitude = area.UpperCorner.Longitude;
-            double theta = lowerLatitude - upperLatitude;
+            double R = 6371.0; // radius of earth in km
 
-            double degree = (Math.PI / 180);
-            double distance = 60 * 1.1515 * (180 / Math.PI) * Math.Acos(
-                Math.Sin(lowerLatitude * degree) * Math.Sin(upperLatitude * degree) +
-                Math.Cos(lowerLatitude * degree) * Math.Cos(upperLatitude * degree) * Math.Cos(theta * degree)
-            );
-            return Math.Round(distance * 1.609344, 2) / 2;
+            double lat1 = area.LowerCorner.Latitude * Math.PI / 180.0;
+            double lon1 = area.LowerCorner.Longitude * Math.PI / 180.0;
+            double lat2 = area.UpperCorner.Latitude * Math.PI / 180.0;
+            double lon2 = area.UpperCorner.Longitude * Math.PI / 180.0;
+
+            double dlat = lat2 - lat1;
+            double dlon = lon2 - lon1;
+
+            double a = Math.Sin(dlat / 2) * Math.Sin(dlat / 2) +
+                       Math.Cos(lat1) * Math.Cos(lat2) *
+                       Math.Sin(dlon / 2) * Math.Sin(dlon / 2);
+
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+            return (R * c)/2;
+        }
+
+        public (string country, string settlement, string region) ParsedAddress(string location)
+        {
+            
         }
     }
 }
