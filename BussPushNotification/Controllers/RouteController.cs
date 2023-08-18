@@ -40,12 +40,14 @@ namespace BussPushNotification.Controllers
         }
 
         [HttpPost("/Routes/Add")]
-        public async Task<IActionResult> FindStations(string country, string region, string settlement, string street)
+        public async Task<IActionResult> FindStations(string address)
         {
             string apiUrl = $"{_apiSettings.BaseUrl}/api/BussRoute/";
             var client = _httpClient.CreateClient();
             client.BaseAddress = new Uri(apiUrl);
 
+            var l = await GetLocation(address);
+             string country = ""; string region="";string settlement = "";
             string jsonStations = await client.GetAsync($"stations/{country}/{region}/{settlement}").Result.Content.ReadAsStringAsync();
             
             List<StationDetails> stationsList= JsonConvert.DeserializeObject<List<StationDetails>>(jsonStations);
